@@ -42,6 +42,7 @@ export abstract class BaseRepo<NewType, UpdateType> {
   public async update(id: number, data: UpdateType): Promise<void> {
     await db
       .updateTable(this.tableName)
+      // @ts-ignore I assume it's because it doesn't know which table will be returned from updateTable, but it should be fine.
       .set(data)
       .where("id", "=", id)
       .executeTakeFirst();
