@@ -13,7 +13,7 @@ async function bootstrap() {
   app.enableCors();
 
   logger.debug('Instantiating tables');
-  Object.values(repos).forEach((repo) => repo.bootstrap(logger))
+  await Promise.all(Object.values(repos).map(async (repo) => await repo.bootstrap(logger)));
 
   logger.debug('Listening on port 3000');
   await app.listen(3000);
