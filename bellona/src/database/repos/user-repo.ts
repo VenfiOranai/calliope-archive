@@ -1,6 +1,7 @@
 import { BaseRepo, BaseTable, Column } from 'src/database/repos/base-repo';
 import { Insertable, Updateable } from 'kysely';
 import { TableNames } from 'src/database/repos/types';
+import { db } from 'src/database/database';
 
 export interface UserTable extends BaseTable {
   username: string;
@@ -19,6 +20,11 @@ export class UserRepo extends BaseRepo<NewUser, UserUpdate> {
     },
     { name: "username", type: "text" },
   ];
-}
 
-export const userRepo = new UserRepo();
+  public async doesUserExist(username: string): Promise<boolean> {
+    return (await db.selectFrom(TableNames.user)
+      .select('id')
+      .where('username', '=', username)
+      .executeTakeFirst()) !== undefined;
+  }
+}
