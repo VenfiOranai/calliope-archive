@@ -4,3 +4,6 @@
 
 # TS
 node_modules
+
+# Data
+data.db
