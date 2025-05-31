@@ -17,17 +17,17 @@ export abstract class BaseRepo<NewType, UpdateType> {
   protected abstract readonly tableName: TableNames;
   protected abstract readonly columns: Column[];
 
-  public async bootstrap() {
+  public async bootstrap(logger: { debug: (message: string) => void }) {
     try {
-      console.log(`Creating table ${this.tableName}`);
+      logger.debug(`Creating table ${this.tableName}`);
       let expression = db.schema.createTable(this.tableName);
       this.columns.forEach((column) =>
         (expression = expression.addColumn(column.name, column.type, column.extras)));
 
       await expression.execute();
-      console.log(`Created table ${this.tableName}`);
+      logger.debug(`Created table ${this.tableName}`);
     } catch (SqliteError) {
-      console.log(`Table ${this.tableName} already exists`);
+      logger.debug(`Table ${this.tableName} already exists`);
     }
   }
 

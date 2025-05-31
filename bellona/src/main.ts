@@ -1,13 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { repos } from 'src/database/repos/repos';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
+  const logger = new Logger('Factory');
+
+  logger.debug('Initializing...');
   const app = await NestFactory.create(AppModule);
+
+  logger.debug('Enabling cors');
   app.enableCors();
 
-  Object.values(repos).forEach((repo) => repo.bootstrap())
+  logger.debug('Instantiating tables');
+  Object.values(repos).forEach((repo) => repo.bootstrap(logger))
 
+  logger.debug('Listening on port 3000');
   await app.listen(3000);
 }
 bootstrap();
